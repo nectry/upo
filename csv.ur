@@ -8,7 +8,7 @@ fun splitLine sep line =
                     readStringLiteral (String.suffix line' 1) (acc ^ chars ^ "\"")
                 else
                     (acc ^ chars, line')
-    
+
         fun fields line justReadSeparator justReadQuoted acc =
             case String.msplit {Haystack = line, Needle = String.str sep ^ "\""} of
                 None =>
@@ -86,7 +86,7 @@ fun nextLine lines =
             Some (String.substring lines {Start = 0, Len = pos},
                   String.suffix lines (pos+1))
     end
-    
+
 fun csvFold [m] (_ : monad m) [acc] (processHeaderLine : string -> acc -> m acc)
             (processRow : list string -> acc -> m acc) sep =
     let
@@ -117,7 +117,7 @@ fun parseLine_simple [fs] (injs : $(map sql_injectable fs)) (reads : $(map read 
         else
             acc
     end
-    
+
 fun parse [fs] (injs : $(map sql_injectable fs)) (reads : $(map read fs)) (fl : folder fs)
           sep (header : int) (input : string) =
     IdentityMonad.run (@csvFold _
@@ -140,7 +140,7 @@ fun positionInList [a] (_ : eq a) (x : a) (ls : list a) : option int =
             case positionInList x ls' of
                 None => None
               | Some n => Some (n + 1)
-    
+
 fun importTableWithHeader [fs] [fsC] [cs] [fs ~ fsC]
     (injs : $(map sql_injectable (fs ++ fsC))) (reads : $(map read fs)) (fl : folder fs) (flC : folder fsC)
     sep (headers : $(map (fn _ => string) fs)) (constants : $fsC)
@@ -214,7 +214,7 @@ functor Import1(M : sig
            | Uploading
            | UploadFailed
            | Uploaded
-         
+
     type a = {UploadStatus : source uploadStatus,
               PasteHere : source string,
               Subwidget : source refreshed}
@@ -245,7 +245,7 @@ functor Import1(M : sig
             case textOfBlob r.Content of
                 None => error <xml>Uploaded file is not text.</xml>
               | Some s => import s
-                   
+
     val subwidget = refreshed.Create
 
     fun refresh a =
@@ -372,6 +372,10 @@ functor ImportWithHeader1(M : sig
                 None => error <xml>Uploaded file is not text.</xml>
               | Some s => import s; ChangeWatcher.changed title
 
+    val clearCsvData : transaction unit =
+        dml (DELETE FROM tab WHERE TRUE);
+        ChangeWatcher.changed title
+
     val subwidget = refreshed.Create
 
     fun refresh a =
@@ -394,9 +398,9 @@ functor ImportWithHeader1(M : sig
                              | Uploading => <xml>Uploading...</xml>
                              | Uploaded => <xml>Import complete.</xml>
                              | UploadFailed => <xml>Import failed!</xml>)}/>
-      <hr/>
 
       {if showTextarea then <xml>
+      <hr/>
         <p><i>Or</i> copy and paste the CSV data here, with a header line that includes at least the following field names:
           {case @foldR [fn _ => string] [fn _ => option xbody]
                  (fn [nm ::_] [t ::_] [r ::_] [[nm] ~ r] (label : string) (ob : option xbody) =>
@@ -417,8 +421,11 @@ functor ImportWithHeader1(M : sig
                               refresh a;
                               set a.PasteHere ""}/>
 
-        <hr/>
       </xml> else <xml></xml>}
+
+      <br/><button onclick={fn _ => rpc clearCsvData; refresh a}>Clear CSV Data</button>
+
+      <hr/>
 
       <dyn signal={sub <- signal a.Subwidget;
                    return (refreshed.Render ctx sub)}/>
