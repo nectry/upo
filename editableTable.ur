@@ -264,7 +264,7 @@ functor Make(M : sig
                    (fn [nm ::_] [p ::_] [r ::_] [[nm] ~ r] (w : Widget.t' p) (v : snd3 p) =>
                        <xml><td>{@Widget.asWidget w v None}</td></xml>)
                    fl widgets a.ToAdd}
-                 <td><button value="Add Row"
+                 <td><button value="Add Row"
                              class="btn btn-primary"
                              onclick={fn _ =>
                                          r <- rowOut a.ToAdd;
