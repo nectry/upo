@@ -1,5 +1,10 @@
-type t
-val create : (* options: *) xml [Cselect, Body] [] [] -> transaction t
-val createSingle (* only select one option *) : xml [Cselect, Body] [] [] -> transaction t
-val render : t -> xbody
-val selected : t -> signal (list string)
+type single
+type multi
+val createMulti : (* options: *) xml [Cselect, Body] [] [] -> transaction multi
+val createSingle (* only select one option *) : xml [Cselect, Body] [] [] -> transaction single
+
+val renderMulti : multi -> xbody
+val renderSingle : single -> xbody
+
+val selectedMulti : multi -> signal (list string)
+val selectedSingle : single -> signal string
