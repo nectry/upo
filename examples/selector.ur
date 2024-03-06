@@ -1,3 +1,5 @@
+val css = bless "https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"
+
 val options = <xml>
     <coption value="a">Alpha</coption>
     <coption value="b" selected={True}>Beta</coption>
@@ -5,6 +7,9 @@ val options = <xml>
 </xml>
 
 val pg_select2 = <xml>
+    <head>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet"/>
+    </head>
     <body>
         <active code={
             w <- Select2.createSingle options;

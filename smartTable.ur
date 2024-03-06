@@ -596,14 +596,14 @@ functor LinkedWithEdit(M : sig
                 <div class="form-group">
                   <label class="control-label">{[savedLabel]}</label>
                   <active code={lsV <- get ls;
-                                s2 <- Select2.create (List.mapX (fn t =>
+                                s2 <- Select2.createMulti (List.mapX (fn t =>
                                                                     if List.mem t lsV then
                                                                         <xml><coption selected={True}>{[t]}</coption></xml>
                                                                     else
                                                                         <xml><coption>{[t]}</coption></xml>) ts);
                                 return <xml>
-                                  {Select2.render s2}
-                                  <dyn signal={seled <- Select2.selected s2;
+                                  {Select2.renderMulti s2}
+                                  <dyn signal={seled <- Select2.selectedMulti s2;
                                                return <xml>
                                                  <active code={set ls (List.mp readError seled);
                                                                return <xml></xml>}/>
@@ -649,12 +649,12 @@ functor LinkedWithEdit(M : sig
                                 Ui.modalIcon ctx
                                              (CLASS "glyphicon glyphicon-pencil-alt")
                                              (lsV <- get ls;
-                                              s2 <- Select2.create (List.mapX (fn t =>
+                                              s2 <- Select2.createMulti (List.mapX (fn t =>
                                                                         if List.mem t lsV then
                                                                             <xml><coption selected={True}>{[t]}</coption></xml>
                                                                         else
                                                                             <xml><coption>{[t]}</coption></xml>) ts);
-                                              return (Ui.modal (seled <- current (Select2.selected s2);
+                                              return (Ui.modal (seled <- current (Select2.selectedMulti s2);
                                                                 seled <- return (List.mp readError seled);
                                                                 List.app (fn selectedNow =>
                                                                              if List.mem selectedNow lsV then
@@ -668,7 +668,7 @@ functor LinkedWithEdit(M : sig
                                                                                  rpc (remove k selectedBefore)) lsV;
                                                                 set ls seled)
                                                                <xml>Change selection</xml>
-                                                               (Select2.render s2)
+                                                               (Select2.renderMulti s2)
                                                                <xml>Save</xml>))}
                      </td></xml>
                  end,
@@ -800,14 +800,14 @@ functor LinkedWithEditForOwner(M : sig
                 <div class="form-group">
                   <label class="control-label">{[savedLabel]}</label>
                   <active code={lsV <- get ls;
-                                s2 <- Select2.create (List.mapX (fn t =>
+                                s2 <- Select2.createMulti (List.mapX (fn t =>
                                                                     if List.mem t lsV then
                                                                         <xml><coption selected={True}>{[t]}</coption></xml>
                                                                     else
                                                                         <xml><coption>{[t]}</coption></xml>) ts);
                                 return <xml>
-                                  {Select2.render s2}
-                                  <dyn signal={seled <- Select2.selected s2;
+                                  {Select2.renderMulti s2}
+                                  <dyn signal={seled <- Select2.selectedMulti s2;
                                                return <xml>
                                                  <active code={set ls (List.mp readError seled);
                                                                return <xml></xml>}/>
@@ -857,12 +857,12 @@ functor LinkedWithEditForOwner(M : sig
                                     Ui.modalIcon ctx
                                                  (CLASS "glyphicon glyphicon-pencil-alt")
                                                  (lsV <- get ls;
-                                                  s2 <- Select2.create (List.mapX (fn t =>
+                                                  s2 <- Select2.createMulti (List.mapX (fn t =>
                                                                             if List.mem t lsV then
                                                                                 <xml><coption selected={True}>{[t]}</coption></xml>
                                                                             else
                                                                                 <xml><coption>{[t]}</coption></xml>) ts);
-                                                  return (Ui.modal (seled <- current (Select2.selected s2);
+                                                  return (Ui.modal (seled <- current (Select2.selectedMulti s2);
                                                                     seled <- return (List.mp readError seled);
                                                                     List.app (fn selectedNow =>
                                                                                  if List.mem selectedNow lsV then
@@ -876,7 +876,7 @@ functor LinkedWithEditForOwner(M : sig
                                                                                      rpc (remove k selectedBefore)) lsV;
                                                                     set ls seled)
                                                                    <xml>Change selection</xml>
-                                                                   (Select2.render s2)
+                                                                   (Select2.renderMulti s2)
                                                                    <xml>Save</xml>))}
                      </td></xml>
                  end,
@@ -992,14 +992,14 @@ functor LinkedWithEditAndDefault(M : sig
                 <div class="form-group">
                   <label class="control-label">{[savedLabel]}</label>
                   <active code={lsV <- get ls;
-                                s2 <- Select2.create (List.mapX (fn t =>
+                                s2 <- Select2.createMulti (List.mapX (fn t =>
                                                                     if List.mem t lsV then
                                                                         <xml><coption selected={True}>{[t]}</coption></xml>
                                                                     else
                                                                         <xml><coption>{[t]}</coption></xml>) ts);
                                 return <xml>
-                                  {Select2.render s2}
-                                  <dyn signal={seled <- Select2.selected s2;
+                                  {Select2.renderMulti s2}
+                                  <dyn signal={seled <- Select2.selectedMulti s2;
                                                return <xml>
                                                  <active code={set ls (List.mp readError seled);
                                                                return <xml></xml>}/>
@@ -1045,12 +1045,12 @@ functor LinkedWithEditAndDefault(M : sig
                                 Ui.modalIcon ctx
                                              (CLASS "glyphicon glyphicon-pencil-alt")
                                              (lsV <- get ls;
-                                              s2 <- Select2.create (List.mapX (fn t =>
+                                              s2 <- Select2.createMulti (List.mapX (fn t =>
                                                                         if List.mem t lsV then
                                                                             <xml><coption selected={True}>{[t]}</coption></xml>
                                                                         else
                                                                             <xml><coption>{[t]}</coption></xml>) ts);
-                                              return (Ui.modal (seled <- current (Select2.selected s2);
+                                              return (Ui.modal (seled <- current (Select2.selectedMulti s2);
                                                                 seled <- return (List.mp readError seled);
                                                                 List.app (fn selectedNow =>
                                                                              if List.mem selectedNow lsV then
@@ -1064,7 +1064,7 @@ functor LinkedWithEditAndDefault(M : sig
                                                                                  rpc (remove k selectedBefore)) lsV;
                                                                 set ls seled)
                                                                <xml>Change selection</xml>
-                                                               (Select2.render s2)
+                                                               (Select2.renderMulti s2)
                                                                <xml>Save</xml>))}
                      </td></xml>
                  end,
