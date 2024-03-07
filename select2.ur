@@ -35,10 +35,9 @@ fun renderSingle self = <xml>
                   <active code={Select2Ffi.replace id
                     (fn x =>
                         set self.Selected
-                        ((fn y => case y of
-                            (z :: _) => z
-                          | [] => error <xml>Source cannot be empty list</xml>
-                        ) x));
+                        (case x of
+                          (z :: _) => z
+                        | [] => error <xml>Source cannot be empty list</xml>));
                                 return <xml></xml>}/>
                 </xml>}/>
 </xml>
