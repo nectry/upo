@@ -1,7 +1,7 @@
 function arrayToUrweb(arr) {
     var ls = null;
     for (var i = arr.length - 1; i >= 0; i--)
-        ls = {_1: arr[i].text, _2: ls};
+        ls = {_1: arr[i].id, _2: ls};
     return ls;
 }
 

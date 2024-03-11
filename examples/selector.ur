@@ -1,8 +1,7 @@
-val options = <xml>
-    <coption value="a">Alpha</coption>
-    <coption value="b" selected={True}>Beta</coption>
-    <coption value="c">Gamma</coption>
-</xml>
+val options =
+    ("a", "Alpha") ::
+    ("b", "Beta") ::
+    ("c", "Gamma") :: []
 
 val pg_select2 = <xml>
     <head>
@@ -10,11 +9,11 @@ val pg_select2 = <xml>
     </head>
     <body>
         <active code={
-            w <- Select2.createSingle options;
+            w <- Select2.createSingle options (Some 1);
             return <xml>
-                {Select2.renderSingle w}
+                {Select2.render w}
                 <dyn signal={
-                    curr <- Select2.selectedSingle w;
+                    curr <- Select2.selected w;
                     return <xml>
                         <active code={
                             return <xml><p style="color: red">{[curr]}</p></xml>
@@ -25,14 +24,14 @@ val pg_select2 = <xml>
     </body>
 </xml>
 
-val pg_select2_multi : page = <xml>
+(* val pg_select2_multi : page = <xml>
     <body>
         <active code={
             w <- Select2.createMulti options;
             return <xml>
-                {Select2.renderMulti w}
+                {Select2.render w}
                 <dyn signal={
-                    curr <- Select2.selectedMulti w;
+                    curr <- Select2.selected w;
                     return <xml>
                         <active code={
                             return <xml><ul>{List.mapX (fn i =>
@@ -42,7 +41,7 @@ val pg_select2_multi : page = <xml>
                 </xml>}/>
 
     </body>
-</xml>
+</xml> *)
 
 
 

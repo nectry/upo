@@ -1,10 +1,12 @@
-type single
-type multi
-val createMulti : (* options: *) xml [Cselect, Body] [] [] -> transaction multi
-val createSingle (* only select one option *) : xml [Cselect, Body] [] [] -> transaction single
+con selector :: (Type -> Type) -> Type -> Type
 
-val renderMulti : multi -> xbody
-val renderSingle : single -> xbody
+class singleOrMulti :: (Type -> Type) -> Type
+val singleOrMulti_option : singleOrMulti option
+val singleOrMulti_list : singleOrMulti list
 
-val selectedMulti : multi -> signal (list string)
-val selectedSingle : single -> signal string
+val createMulti : t ::: Type -> list (t * string * bool) -> transaction (selector list t)
+val createSingle : t ::: Type -> list (t * string) -> option int -> transaction (selector option t)
+
+val render : t ::: Type -> k ::: (Type -> Type) -> singleOrMulti k -> selector k t -> xbody
+
+val selected : t ::: Type -> k ::: (Type -> Type) -> monad k -> selector k t -> signal (k t)

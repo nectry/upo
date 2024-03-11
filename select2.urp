@@ -4,4 +4,7 @@ clientOnly Select2Ffi.replace
 benignEffectful Select2Ffi.replace
 jsFile select2Urweb.js
 
+$/list
+$/option
+$/monad
 select2
