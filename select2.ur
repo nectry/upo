@@ -24,6 +24,10 @@ fun singleOrMulti_option selections =
   | [] => None
 fun singleOrMulti_list selections = List.mp readError selections
 
+con mappable k = t ::: Type -> u ::: Type -> (t -> u) -> k t -> k u
+fun mappable_option [t] [u] f x = Option.mp f x
+fun mappable_list [t] [u] f x = List.mp f x
+
 fun createOptions [t ::: Type] (options : list (t * string * bool)) : xml [Cselect, Body] [] [] =
     List.mapXi (fn i (_, x, s) => <xml><coption value={show i} selected={s}>{[x]}</coption></xml>) options
 
@@ -70,6 +74,6 @@ fun lookupValue [t ::: Type] (values : list t) (i : int) : t =
   (* This computation cannot fail since the `i` argument is guaranteed to be in-bounds. *)
   Option.unsafeGet (List.nth values i)
 
-fun selected [t] [k] (_ : monad k) self =
+fun selected [t] [k] (mp : mappable k) self =
   s <- signal self.Selected;
-  return (Monad.mp (lookupValue self.Values) s)
+  return (mp (lookupValue self.Values) s)
