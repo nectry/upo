@@ -24,6 +24,7 @@ fun singleOrMulti_option selections =
   | [] => None
 fun singleOrMulti_list selections = List.mp readError selections
 
+(* We shouldn't have to write this - there should be a generic "mappable" or "functor" with instances for option and list. *)
 con mappable k = t ::: Type -> u ::: Type -> (t -> u) -> k t -> k u
 fun mappable_option [t] [u] f x = Option.mp f x
 fun mappable_list [t] [u] f x = List.mp f x
