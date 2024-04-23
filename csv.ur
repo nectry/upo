@@ -46,12 +46,18 @@ fun splitLine sep line =
 
 fun nextLine lines =
     let
+        (* Finds the end of line character(s) and how many characters they are
+        (either 1 or 2 due to lf/cr/crlf), or returns None. *)
         fun findIt pos lines =
             case lines of
                 "" => None
               | _ =>
-                if String.sub lines 0 = #"\n" then
-                    Some pos
+                (* We check for \r, \n, or both. *)
+                if String.sub lines 0 = #"\n" || String.sub lines 0 = #"\r" then
+                  if String.length lines > 1 && (String.sub lines 1 = #"\n" || String.sub lines 1 = #"\r") then
+                    Some (pos, 2)
+                  else
+                    Some (pos, 1)
                 else if String.sub lines 0 = #"\"" then
                     skipQuoted (pos+1) (String.suffix lines 1)
                 else
@@ -82,9 +88,9 @@ fun nextLine lines =
                 None
             else
                 Some (lines, "")
-          | Some pos =>
+          | Some (pos, skip) =>
             Some (String.substring lines {Start = 0, Len = pos},
-                  String.suffix lines (pos+1))
+                  String.suffix lines (pos+skip))
     end
 
 fun csvFold [m] (_ : monad m) [acc] (processHeaderLine : string -> acc -> m acc)

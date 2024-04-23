@@ -1,3 +1,19 @@
+
+(* A widget of type `t v s c` has a value of type `v`, a client-side state of
+type `s`, and server-side configuration state of type `c`.  For example, a
+textbox widget would have the type: `t string (source string) ()`.  This
+indicates that the value produced by the widget is a `string`, a client can
+render/use the textbox precisely with a `source string`, and there's no
+server-side configuration needed.  Meanwhile, A dropdown that would provide
+values for a foreign keyed table would have type `t (option a) (source string *
+source (list a)) (list a)` (where the values of the foreign table are of type
+`a`).  This indicates that the resulting value is of type `option a` (either an
+`a` value or a lack of selection), the client has everything it needs to render
+and use the dropdown assuming it has a `source string` to hold the dropdown's
+selection along with a list of possible values (conveniently stored in a source
+too, although this isn't strictly nececssary if we never want to reconfigure
+it), and the server will produce a `list string` of possible values as a
+configuration step. *)
 con t (value :: Type) (state :: Type) (config :: Type) =
       { Configure : transaction config,
         Create : config -> transaction state,
@@ -7,6 +23,8 @@ con t (value :: Type) (state :: Type) (config :: Type) =
         Reconfigure : state -> config -> transaction unit,
         AsWidget : state -> option id -> xbody,
         AsWidgetSimple : state -> option id -> xbody,
+        (* AsWidgetDisableable : state -> signal bool -> option id -> xbody, *)
+          (* Render the widget, but make it editable only when the input signal is True. *)
         Value : state -> signal value,
         AsValue : value -> xbody,
         Optional : bool }
