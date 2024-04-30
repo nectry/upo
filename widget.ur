@@ -187,6 +187,60 @@ val opt_timebox = { Configure = return (),
                                         | Some t => if t = minTime then <xml><b>INVALID</b></xml> else txt t,
                     Optional = True }
 
+val datebox = { Configure = return (),
+                Create = fn () => DateTimePicker.createDate None,
+                Initialize = fn () n => DateTimePicker.createDate (Some n),
+                Reset = DateTimePicker.reset,
+                Set = DateTimePicker.set,
+                Reconfigure = fn _ _ => return (),
+                AsWidget = fn v _ => DateTimePicker.render v,
+                AsWidgetSimple = fn v _ => DateTimePicker.render v,
+                Value = DateTimePicker.content,
+                AsValue = fn t => if t = minTime then <xml><b>INVALID</b></xml> else txt t,
+                Optional = False }
+
+val opt_datebox = { Configure = return (),
+                    Create = fn () => DateTimePicker.createDate None,
+                    Initialize = fn () => DateTimePicker.createDate,
+                    Reset = DateTimePicker.reset,
+                    Set = fn s tmo => case tmo of None => DateTimePicker.reset s
+                                                | Some v => DateTimePicker.set s v,
+                    Reconfigure = fn _ _ => return (),
+                    AsWidget = fn v _ => DateTimePicker.render v,
+                    AsWidgetSimple = fn v _ => DateTimePicker.render v,
+                    Value = fn s => v <- DateTimePicker.content s; return (Some v),
+                    AsValue = fn t => case t of
+                                          None => <xml></xml>
+                                        | Some t => if t = minTime then <xml><b>INVALID</b></xml> else txt t,
+                    Optional = True }
+
+val daterangebox = { Configure = return (),
+                Create = fn () => DateTimePicker.createRange None,
+                Initialize = fn () n => DateTimePicker.createRange (Some n),
+                Reset = DateTimePicker.resetRange,
+                Set = DateTimePicker.setRange,
+                Reconfigure = fn _ _ => return (),
+                AsWidget = fn v _ => DateTimePicker.render v,
+                AsWidgetSimple = fn v _ => DateTimePicker.render v,
+                Value = DateTimePicker.content,
+                AsValue = fn t => if t = minTime then <xml><b>INVALID</b></xml> else txt t,
+                Optional = False }
+
+val opt_daterangebox = { Configure = return (),
+                    Create = fn () => DateTimePicker.createRange None,
+                    Initialize = fn () => DateTimePicker.createRange,
+                    Reset = DateTimePicker.reset,
+                    Set = fn s tmo => case tmo of None => DateTimePicker.resetRange s
+                                                | Some v => DateTimePicker.setRange s v,
+                    Reconfigure = fn _ _ => return (),
+                    AsWidget = fn v _ => DateTimePicker.render v,
+                    AsWidgetSimple = fn v _ => DateTimePicker.render v,
+                    Value = fn s => v <- DateTimePicker.content s; return (Some v),
+                    AsValue = fn t => case t of
+                                          None => <xml></xml>
+                                        | Some t => if t = minTime then <xml><b>INVALID</b></xml> else txt t,
+                    Optional = True }
+
 val urlbox = { Configure = return (),
                Create = fn () => source "",
                Initialize = fn () => source,
