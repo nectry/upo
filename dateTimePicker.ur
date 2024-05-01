@@ -58,11 +58,16 @@ fun render ed = ed.Show
 
 fun content ed = signal ed.Source
 
-fun reset ed = tm <- now; set ed.Source tm
+fun reset ed = tm <- now; Basis.set ed.Source tm
 fun set ed tm = Basis.set ed.Source tm
+
+(* TODO: surely this could be polymorphic? *)
+fun renderRange ed = ed.Show
+
+fun contentRange ed = signal ed.Source
 
 fun resetRange ed =
     tmStart <- now;
     tmEnd <- return (addSeconds tmStart (24 * 60 * 60));
-    set ed.Source (tmStart, tmEnd)
+    Basis.set ed.Source (tmStart, tmEnd)
 fun setRange ed tms = Basis.set ed.Source (tms.1, tms.2)

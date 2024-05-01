@@ -16,6 +16,7 @@ script https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js
 script https://cdn.jsdelivr.net/npm/jquery-datetimepicker@2.5.21/build/jquery.datetimepicker.full.min.js
 script https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.umd.min.js
 allow url https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.css
+allow url https://cdn.jsdelivr.net/npm/@easepick/range-plugin@1.2.1/dist/index.css
 script https://cdn.jsdelivr.net/npm/chart.js
 file /style.css style.css
 library navbar

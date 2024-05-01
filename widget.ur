@@ -220,25 +220,25 @@ val daterangebox = { Configure = return (),
                 Reset = DateTimePicker.resetRange,
                 Set = DateTimePicker.setRange,
                 Reconfigure = fn _ _ => return (),
-                AsWidget = fn v _ => DateTimePicker.render v,
-                AsWidgetSimple = fn v _ => DateTimePicker.render v,
-                Value = DateTimePicker.content,
-                AsValue = fn t => if t = minTime then <xml><b>INVALID</b></xml> else txt t,
+                AsWidget = fn v _ => DateTimePicker.renderRange v,
+                AsWidgetSimple = fn v _ => DateTimePicker.renderRange v,
+                Value = DateTimePicker.contentRange,
+                AsValue = fn t => if t.1 = minTime then <xml><b>INVALID</b></xml> else <xml>{[t.1]}-{[t.2]}</xml>,
                 Optional = False }
 
 val opt_daterangebox = { Configure = return (),
                     Create = fn () => DateTimePicker.createRange None,
                     Initialize = fn () => DateTimePicker.createRange,
-                    Reset = DateTimePicker.reset,
+                    Reset = DateTimePicker.resetRange,
                     Set = fn s tmo => case tmo of None => DateTimePicker.resetRange s
                                                 | Some v => DateTimePicker.setRange s v,
                     Reconfigure = fn _ _ => return (),
-                    AsWidget = fn v _ => DateTimePicker.render v,
-                    AsWidgetSimple = fn v _ => DateTimePicker.render v,
-                    Value = fn s => v <- DateTimePicker.content s; return (Some v),
+                    AsWidget = fn v _ => DateTimePicker.renderRange v,
+                    AsWidgetSimple = fn v _ => DateTimePicker.renderRange v,
+                    Value = fn s => v <- DateTimePicker.contentRange s; return (Some v),
                     AsValue = fn t => case t of
                                           None => <xml></xml>
-                                        | Some t => if t = minTime then <xml><b>INVALID</b></xml> else txt t,
+                                        | Some t => if t.1 = minTime then <xml><b>INVALID</b></xml> else <xml>{[t.1]}-{[t.2]}</xml>,
                     Optional = True }
 
 val urlbox = { Configure = return (),

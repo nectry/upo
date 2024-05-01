@@ -93,7 +93,7 @@ val daterangebox : t (time * time) daterangebox daterangebox_config
 
 type opt_daterangebox
 type opt_daterangebox_config
-val opt_daterangebox : t (option time * time) opt_daterangebox opt_daterangebox_config
+val opt_daterangebox : t (option (time * time)) opt_daterangebox opt_daterangebox_config
 
 con choicebox :: Type -> Type
 con choicebox_config :: Type -> Type

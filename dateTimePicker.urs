@@ -7,5 +7,7 @@ val render : t -> xbody
 val content : t -> signal time
 val reset : t -> transaction unit
 val set : t -> time -> transaction unit
+val renderRange : tRange -> xbody
+val contentRange : tRange -> signal (time * time)
 val resetRange : tRange -> transaction unit
 val setRange : tRange -> (time * time) -> transaction unit
