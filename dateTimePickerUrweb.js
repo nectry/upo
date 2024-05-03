@@ -22,7 +22,7 @@ function uw_dateTimePicker_replace(r) {
 
     listen(ss(r._Source),
            function(v) {
-               dtp.Value = new Date(v);
+               picker.setDate(new Date(v));
            });
 }
 
@@ -45,7 +45,7 @@ function uw_dateTimePicker_replaceDate(r) {
 
     listen(ss(r._Source),
            function(v) {
-               dtp.Value = new Date(v);
+               picker.setDate(new Date(v));
            });
 }
 
@@ -82,9 +82,7 @@ function uw_dateTimePicker_replaceRange(r) {
 
     listen(ss(r._Source),
            function(v) {
-               dtp.Value = {
-                   _1: new Date(v._1),
-                   _2: new Date(v._2),
-               };
+               picker.setStartDate(new Date(v._1));
+               picker.setStartDate(new Date(v._2));
            });
 }
