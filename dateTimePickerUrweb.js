@@ -21,7 +21,7 @@ function uw_dateTimePicker_replace(r) {
 
     listen(ss(r._Source),
            function(v) {
-               picker.setDate(new Date(v));
+               picker.setDate(new Date(v / 1000));
            });
 }
 
@@ -43,14 +43,12 @@ function uw_dateTimePicker_replaceDate(r) {
 
     listen(ss(r._Source),
            function(v) {
-               picker.setDate(new Date(v));
+               picker.setDate(new Date(v / 1000));
            });
 }
 
 function uw_dateTimePicker_replaceRange(r) {
     var dates = sg(r._Source);
-    var start = dates._1;
-    var end = dates._2;
 
     const picker = new easepick.create({
         element: document.getElementById(r._Id1),
@@ -62,23 +60,24 @@ function uw_dateTimePicker_replaceRange(r) {
         RangePlugin: {
             tooltip: true,
             elementEnd: document.getElementById(r._Id2),
-            startDate: new Date(start / 1000),
-            endDate: new Date(end / 1000),
+            startDate: new Date(dates._1 / 1000),
+            endDate: new Date(dates._2 / 1000),
         },
         setup(picker) {
             picker.on('select', (e) => {
-                const { start, end } = e.detail;
+                start = picker.getStartDate();
+                end = picker.getEndDate();
                 sv(r._Source, {
-                    _1: start.getTime() * 1000,
-                    _2: end.getTime() * 1000
+                    _1: start.date.getTime() * 1000,
+                    _2: end.date.getTime() * 1000
                 });
             });
         },
     });
 
     listen(ss(r._Source),
-           function(v) {
-               picker.setStartDate(new Date(v._1));
-               picker.setEndDate(new Date(v._2));
-           });
+          function(v) {
+              picker.setStartDate(new Date(v._1 / 1000));
+              picker.setEndDate(new Date(v._2 / 1000));
+          });
 }
