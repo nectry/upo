@@ -1,10 +1,9 @@
 function uw_dateTimePicker_replace(r) {
-    var start = sg(r._Source); // in milliseconds; divide by 1000 to get unix timestamp
-    var dtp = $('#' + r._Id);
+    var date = sg(r._Source); // in milliseconds; divide by 1000 to get unix timestamp
 
     const picker = new easepick.create({
-        element: dtp,
-        date: new Date(start / 1000),
+        element: document.getElementById(r._Id),
+        date: new Date(date / 1000),
         css: [
             'https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.css',
             'https://cdn.jsdelivr.net/npm/@easepick/time-plugin@1.2.1/dist/index.css',
@@ -27,12 +26,11 @@ function uw_dateTimePicker_replace(r) {
 }
 
 function uw_dateTimePicker_replaceDate(r) {
-    var start = sg(r._Source); // in milliseconds; divide by 1000 to get unix timestamp
-    var dtp = $('#' + r._Id);
+    var date = sg(r._Source); // in milliseconds; divide by 1000 to get unix timestamp
 
     const picker = new easepick.create({
-        element: dtp,
-        date: new Date(start / 1000),
+        element: document.getElementById(r._Id),
+        date: new Date(date / 1000),
         css: [
             'https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.css'
         ],
@@ -53,11 +51,9 @@ function uw_dateTimePicker_replaceRange(r) {
     var dates = sg(r._Source);
     var start = dates._1;
     var end = dates._2;
-    var dtp1 = $('#' + r._Id1);
-    var dtp2 = $('#' + r._Id2);
 
     const picker = new easepick.create({
-        element: dtp1,
+        element: document.getElementById(r._Id1),
         css: [
             'https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.css',
             'https://cdn.jsdelivr.net/npm/@easepick/range-plugin@1.2.1/dist/index.css',
@@ -65,7 +61,7 @@ function uw_dateTimePicker_replaceRange(r) {
         plugins: ['RangePlugin'],
         RangePlugin: {
             tooltip: true,
-            elementEnd: dtp2,
+            elementEnd: document.getElementById(r._Id2),
             startDate: new Date(start / 1000),
             endDate: new Date(end / 1000),
         },
@@ -83,6 +79,6 @@ function uw_dateTimePicker_replaceRange(r) {
     listen(ss(r._Source),
            function(v) {
                picker.setStartDate(new Date(v._1));
-               picker.setStartDate(new Date(v._2));
+               picker.setEndDate(new Date(v._2));
            });
 }
