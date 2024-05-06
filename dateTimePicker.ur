@@ -70,4 +70,4 @@ fun resetRange ed =
     tmStart <- now;
     tmEnd <- return (addSeconds tmStart (24 * 60 * 60));
     Basis.set ed.Source (tmStart, tmEnd)
-fun setRange ed tms = Basis.set ed.Source (tms.1, tms.2)
+fun setRange ed tms = Basis.set ed.Source tms
