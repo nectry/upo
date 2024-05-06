@@ -68,8 +68,8 @@ function uw_dateTimePicker_replaceRange(r) {
                 start = picker.getStartDate();
                 end = picker.getEndDate();
                 sv(r._Source, {
-                    _1: start.date.getTime() * 1000,
-                    _2: end.date.getTime() * 1000
+                    _1: start.getTime() * 1000,
+                    _2: end.getTime() * 1000
                 });
             });
         },
