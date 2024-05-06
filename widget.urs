@@ -79,6 +79,22 @@ type opt_timebox
 type opt_timebox_config
 val opt_timebox : t (option time) opt_timebox opt_timebox_config
 
+type datebox
+type datebox_config
+val datebox : t time datebox datebox_config
+
+type opt_datebox
+type opt_datebox_config
+val opt_datebox : t (option time) opt_datebox opt_datebox_config
+
+type daterangebox
+type daterangebox_config
+val daterangebox : t (time * time) daterangebox daterangebox_config
+
+type opt_daterangebox
+type opt_daterangebox_config
+val opt_daterangebox : t (option (time * time)) opt_daterangebox opt_daterangebox_config
+
 con choicebox :: Type -> Type
 con choicebox_config :: Type -> Type
 val choicebox : a ::: Type ->
