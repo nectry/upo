@@ -10,6 +10,7 @@ type selector k t =
   {Options : xml [Cselect, Body] [] [],
    Values : list t,
    Selected : source (k int),
+   Id : id,
    Multi : bool}
 
 (* Typeclass describing how a type is like a list, because it can go to or from
@@ -55,7 +56,13 @@ fun createMulti [t] options =
       val selection = List.foldr (fn (_, _, s) (i, xs) => if s then (i+1, i :: xs) else (i+1, xs)) (0, []) options
     in
       s <- source selection.2;
-      return {Options = createOptions options, Values = List.mp (fn x => x.1) options, Selected = s, Multi = True}
+      id <- fresh;
+      return {
+        Options = createOptions options,
+        Values = List.mp (fn x => x.1) options,
+        Selected = s,
+        Id = id,
+        Multi = True}
     end
 
 (* Takes a list of options, each one a tuple:
@@ -70,7 +77,13 @@ fun createSingle [t] options selection =
       val options' = List.mapi (fn i (v, x) => (v, x, Some i = selection')) options
     in
       s <- source selection';
-      return {Options = createOptions options', Values = List.mp (fn x => x.1) options, Selected = s, Multi = False}
+      id <- fresh;
+      return {
+        Options = createOptions options',
+        Values = List.mp (fn x => x.1) options,
+        Selected = s,
+        Id = id,
+        Multi = False}
     end
 
 fun createRequiredSingle [t] options selection =
@@ -79,21 +92,49 @@ fun createRequiredSingle [t] options selection =
       val options' = List.mapi (fn i (v, x) => (v, x, i = selection')) options
     in
       s <- source selection';
-      return {Options = createOptions options', Values = List.mp (fn x => x.1) options, Selected = s, Multi = False}
+      id <- fresh;
+      return {
+        Options = createOptions options',
+        Values = List.mp (fn x => x.1) options,
+        Selected = s,
+        Id = id,
+        Multi = False}
     end
 
+(* NOTE: We have to prepend a "x" to all the numbers because of some weird
+mangling that urweb does.  Similarly, in `render`, we need to take the suffix of
+the returned "number" because it has an "x" on the front. *)
+fun setSingleSelection' [t] [k] self i =
+  Select2Ffi.setValues self.Id (("x" ^ show i) :: [])
+
+fun setMultiSelection' [t] self iLst =
+  Select2Ffi.setValues self.Id (List.mp (fn i => "x" ^ show i) iLst)
+
+fun setSingleSelection [t] [k] (_ : eq t) self t =
+  case List.findIndex (fn x => x = t) self.Values of
+    None => error <xml>Could not set value of select2</xml>
+  | Some i => Select2Ffi.setValues self.Id (("x" ^ show i) :: [])
+
+fun setMultiSelection [t] (_ : eq t) self ts =
+  let
+    fun findIndexOrFail (t : t) =
+      case List.findIndex (fn x => x = t) self.Values of
+        None => error <xml>Could not set value of select2</xml>
+      | Some i => "x" ^ show i
+  in
+    Select2Ffi.setValues self.Id (List.mp findIndexOrFail ts)
+  end
 
 fun render [t] [k] (lstLike : listLike k) (mp : mappable k) self = <xml>
-  <active code={id <- fresh;
-                return <xml>
+  <active code={return <xml>
                   <span onclick={fn _ => stopPropagation}>
-                    <cselect id={id} multiple={self.Multi}>
+                    <cselect id={self.Id} multiple={self.Multi}>
                       {self.Options}
                     </cselect>
                   </span>
                   <active code={
-                    Select2Ffi.replace id
-                      (fn x => set self.Selected (mp readError (lstLike.FromList [string] x)));
+                    Select2Ffi.replace self.Id
+                      (fn x => set self.Selected (mp (fn x => readError (String.suffix x 1)) (lstLike.FromList [string] x)));
                     return <xml></xml>}/>
                 </xml>}/>
 </xml>

@@ -19,6 +19,12 @@ val pg_select2 = <xml>
                             return <xml><p style="color: red">{[curr]}</p></xml>
                         }/>
                        </xml>}/>
+                <button
+                  onclick={fn _ => Select2.setSingleSelection w "a"}>
+                  Select Alpha</button>
+                <button
+                  onclick={fn _ => Select2.setSingleSelection' w 2}>
+                  Select 3</button>
                 </xml>}/>
 
     </body>
