@@ -2,12 +2,14 @@ table listeners : { Topic : string, Channel : channel bool }
 sequence channelIds
 table channels : { Id : int, Client : client, Channel : channel bool }
 
+(* Broadcasts changes to all listeners of a topic. *)
 fun changed topic =
     queryI1 (SELECT listeners.Channel
              FROM listeners
              WHERE listeners.Topic = {[topic]})
     (fn {Channel = ch} => send ch True)
 
+(* Broadcasts changes to all listeners of a topic, except the caller. *)
 fun changedBy id topic =
     me <- self;
     queryI1 (SELECT listeners.Channel
