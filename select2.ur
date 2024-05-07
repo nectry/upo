@@ -37,9 +37,6 @@ val listLike_ident = {
   ToList = fn [t] x => x :: []
 }
 
-fun fromList [k ::: Type -> Type] [t ::: Type] (l : listLike k) (lst : list t) : k t =
-  l.FromList lst
-
 (* We shouldn't have to write this - there should be a generic "mappable" or
 "functor" with instances for option and list. *)
 con mappable k = t ::: Type -> u ::: Type -> (t -> u) -> k t -> k u
@@ -79,14 +76,14 @@ fun createSingle [t] options selection =
 fun createRequiredSingle [t] options selection =
     let
       val selection' = min (max selection 0) (List.length options - 1)
-      val options' = List.mapi (fn i (v, x) => (v, x, Some i = selection')) options
+      val options' = List.mapi (fn i (v, x) => (v, x, i = selection')) options
     in
       s <- source selection';
       return {Options = createOptions options', Values = List.mp (fn x => x.1) options, Selected = s, Multi = False}
     end
 
 
-fun render [t] [k] (_ : listLike k) (mp : mappable k) self = <xml>
+fun render [t] [k] (lstLike : listLike k) (mp : mappable k) self = <xml>
   <active code={id <- fresh;
                 return <xml>
                   <span onclick={fn _ => stopPropagation}>
@@ -96,7 +93,7 @@ fun render [t] [k] (_ : listLike k) (mp : mappable k) self = <xml>
                   </span>
                   <active code={
                     Select2Ffi.replace id
-                      (fn x => set self.Selected (mp readError (fromList x)));
+                      (fn x => set self.Selected (mp readError (lstLike.FromList [string] x)));
                     return <xml></xml>}/>
                 </xml>}/>
 </xml>
