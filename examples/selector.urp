@@ -1,0 +1,7 @@
+library ../select2
+script https://code.jquery.com/jquery-3.6.0.min.js
+script https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js
+allow url https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css
+
+$/list
+selector

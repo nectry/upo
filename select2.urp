@@ -1,7 +1,14 @@
 ffi select2Ffi
 jsFunc Select2Ffi.replace=uw_select2_replace
+jsFunc Select2Ffi.setValues=uw_select2_set
 clientOnly Select2Ffi.replace
+clientOnly Select2Ffi.setValues
 benignEffectful Select2Ffi.replace
+benignEffectful Select2Ffi.setValues
 jsFile select2Urweb.js
 
+$/list
+$/option
+$/monad
+$/string
 select2
