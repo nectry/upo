@@ -15,6 +15,7 @@ val css =
      DateTimePicker = bless "https://cdn.jsdelivr.net/npm/jquery-datetimepicker@2.5.21/jquery.datetimepicker.css",
      EasePickDatePicker = bless "https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.css",
      EasePickDateRangePicker = bless "https://cdn.jsdelivr.net/npm/@easepick/range-plugin@1.2.1/dist/index.css",
+     Dropzone = bless "https://unpkg.com/dropzone@5/dist/min/dropzone.min.css",
      Upo = bless "/style.css"}
 
 val navclasses = CLASS "navbar navbar-expand-md navbar-dark fixed-top bg-dark"

@@ -1,0 +1,8 @@
+ffi dropzoneFfi
+jsFunc DropzoneFfi.setupDropzone=setupDropzone
+jsFunc DropzoneFfi.mkIframe=mkIframe
+jsFile dropzone.js
+rewrite style Dropzone/* [-]
+
+$/option
+dropzone

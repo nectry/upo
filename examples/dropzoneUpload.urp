@@ -1,0 +1,9 @@
+library ../dropzone
+rewrite url DropzoneUpload/*
+database dbname=test
+sql dropzoneUpload.sql
+allow mime image/jpeg
+allow url https://unpkg.com/dropzone@5/dist/min/dropzone.min.css
+script https://unpkg.com/dropzone@5/dist/dropzone.js
+
+dropzoneUpload
