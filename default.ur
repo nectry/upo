@@ -12,7 +12,6 @@ val css =
      Fullcalendar = bless "https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/main.min.css",
      FullcalendarDaygrid = bless "https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.min.css",
      FullcalendarTimegrid = bless "https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/timegrid/main.min.css",
-     DateTimePicker = bless "https://cdn.jsdelivr.net/npm/jquery-datetimepicker@2.5.21/jquery.datetimepicker.css",
      EasePickDatePicker = bless "https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.css",
      EasePickDateRangePicker = bless "https://cdn.jsdelivr.net/npm/@easepick/range-plugin@1.2.1/dist/index.css",
      Dropzone = bless "https://unpkg.com/dropzone@5/dist/min/dropzone.min.css",
