@@ -11,6 +11,7 @@ allow env SSL_CLIENT_S_DN
 allow mime text/csv
 allow mime text/tab-separated-values
 allow meta viewport
+allow meta theme-color
 ffi upoFfi
 clientOnly UpoFfi.activateModal
 clientOnly UpoFfi.deactivateModal

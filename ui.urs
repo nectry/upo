@@ -64,17 +64,21 @@ signature THEME = sig
     val fl : folder r
     val css : $(mapU url r)
 
+    (* Any special OnLoad functionality *)
+    val defaultOnLoad : transaction unit
+
+    (* A color to set the meta theme-color *)
+    val themeColor : option string
+
     (* Shortcut icon *)
     val icon : option url
 
-    (* Wrap body contents with this function, to introduce extra fanciness *)
-    val wrap : xbody -> xbody
+    (* Wrap the nav bar contents with this function, to introduce extra
+    fanciness.  Takes the current page url and the page title. *)
+    val wrapNav : url -> string -> xbody -> xbody
 
-    (* Styling for top navbar *)
-    val navclasses : css_class
-
-    (* Should page titles be rendered in navbars, or should we leave that to [wrap]? *)
-    val titleInNavbar : bool
+    (* Wrap the main body with this function. *)
+    val wrapBody : xbody -> xbody
 end
 
 functor Make(M : THEME) : sig

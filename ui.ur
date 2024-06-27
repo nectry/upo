@@ -91,31 +91,35 @@ signature THEME = sig
     con r :: {Unit}
     val fl : folder r
     val css : $(mapU url r)
+    val defaultOnLoad : transaction unit
+    val themeColor : option string
     val icon : option url
-    val wrap : xbody -> xbody
-    val navclasses : css_class
-    val titleInNavbar : bool
+    val wrapNav : url -> string -> xbody -> xbody
+    val wrapBody : xbody -> xbody
 end
 
 
 
 functor Make(M : THEME) = struct
-    fun themed_head titl = <xml>
+    fun themed_head (titl : option string) (includeIcon : bool) (includeMeta : bool) = <xml>
       <head>
-        <title>{[titl]}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        {case titl of
+            None => <xml/>
+          | Some titl => <xml><title>{[titl]}</title></xml>}
+        {if includeMeta then <xml><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/></xml> else <xml/>}
         {@mapUX [url] [_]
           (fn [nm ::_] [rest ::_] [_~_] url =>
               <xml><link rel="stylesheet" href={url}/></xml>)
           M.fl M.css}
-        {case M.icon of
-             None => <xml></xml>
-           | Some icon => <xml><link rel="shortcut icon" href={icon} type="image/vnd.microsoft.icon"></link></xml>}
+        {case M.themeColor of Some c => <xml><meta name="theme-color" content={c}/></xml> | None => <xml/>}
+        {case (includeIcon, M.icon) of
+            (True, Some icon) => <xml><link rel="shortcut icon" href={icon} type="image/vnd.microsoft.icon"></link></xml>
+          | _ => <xml/>}
       </head>
     </xml>
 
-    fun themed_body url titl onl mid nid ms tbar tabs bod = <xml>
-      <body onload={onl}>
+    fun bodyWithModal mid ms onl bod = <xml>
+      <body class="bg-light" onload={M.defaultOnLoad; onl}>
         <div class="modal fade" id={mid}>
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -123,32 +127,30 @@ functor Make(M : THEME) = struct
             </div>
           </div>
         </div>
-
-        {M.wrap <xml>
-          <header class="sticky-top bg-white flex-md-nowrap p-0">
-            <nav class={M.navclasses}>
-              {if M.titleInNavbar then <xml><a class="navbar-brand ps-4" href={url}>{[titl]}</a></xml> else <xml></xml>}
-              <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target={"#" ^ show nid} aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"/>
-              </button>
-              <div id={nid} class="collapse navbar-collapse">
-                <ul class="bs-nav navbar-nav">
-                  {tabs}
-                </ul>
-              </div>
-              {tbar}
-            </nav>
-          </header>
-
-          <main role="main" class="container">
-            {bod}
-          </main>
-        </xml>}
+        {bod}
       </body>
     </xml>
 
+    fun themed_body url titl onl mid nid ms tbar tabs bod =
+      bodyWithModal mid ms onl
+        (<xml>
+          {M.wrapNav url titl <xml>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target={"#" ^ show nid} aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"/>
+            </button>
+            <div id={nid} class="collapse navbar-collapse">
+              <ul class="bs-nav navbar-nav">
+                {tabs}
+              </ul>
+            </div>
+            {tbar}
+          </xml>}
+
+          {M.wrapBody bod}
+        </xml>)
+
     fun themed url titl onl mid nid ms tbar tabs bod = <xml>
-      {themed_head titl}
+      {themed_head (Some titl) True True}
       {themed_body url titl onl mid nid ms tbar tabs bod}
     </xml>
 
@@ -171,24 +173,10 @@ functor Make(M : THEME) = struct
         ms <- source <xml/>;
         state <- t.Create;
         return <xml>
-          <head>
-            {@mapUX [url] [_]
-              (fn [nm ::_] [rest ::_] [_~_] url =>
-                  <xml><link rel="stylesheet" href={url}/></xml>)
-              M.fl M.css}
-          </head>
-
-          <body onload={t.Onload state}>
-            <div class="modal fade" id={mid}>
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                  <dyn signal={signal ms}/>
-                </div>
-              </div>
-            </div>
-
-            {t.Render {ModalId = mid, ModalSpot = ms, Tab = None} state}
-          </body>
+          {themed_head None False False}
+          {bodyWithModal mid ms
+            (t.Onload state)
+            (t.Render {ModalId = mid, ModalSpot = ms, Tab = None} state)}
         </xml>
 
     fun minimal [a] titl (t : t a) =
@@ -196,25 +184,10 @@ functor Make(M : THEME) = struct
         ms <- source <xml/>;
         state <- t.Create;
         return <xml>
-          <head>
-            {@mapUX [url] [_]
-              (fn [nm ::_] [rest ::_] [_~_] url =>
-                  <xml><link rel="stylesheet" href={url}/></xml>)
-              M.fl M.css}
-            <title>{[titl]}</title>
-          </head>
-
-          <body onload={t.Onload state}>
-            <div class="modal fade" id={mid}>
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                  <dyn signal={signal ms}/>
-                </div>
-              </div>
-            </div>
-
-            {t.Render {ModalId = mid, ModalSpot = ms, Tab = None} state}
-          </body>
+          {themed_head (Some titl) False False}
+          {bodyWithModal mid ms
+            (t.Onload state)
+            (t.Render {ModalId = mid, ModalSpot = ms, Tab = None} state)}
         </xml>
 
     fun tabbedWithToolbar [ts] (fl : folder ts) (titl : string) (tbar : xbody) (ts : $(map (fn a => option string * t a) ts)) (below : context -> xbody) =
@@ -306,33 +279,14 @@ functor Make(M : THEME) = struct
         ms <- source <xml/>;
 
         return <xml>
-          <head>
-            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-            <title>{[titl]}</title>
-            {@mapUX [url] [_]
-              (fn [nm ::_] [rest ::_] [_~_] url =>
-                  <xml><link rel="stylesheet" href={url}/></xml>)
-              M.fl M.css}
-            {case M.icon of
-                 None => <xml></xml>
-               | Some icon => <xml><link rel="shortcut icon" href={icon} type="image/vnd.microsoft.icon"></link></xml>}
-          </head>
-
-          <body onload={List.app (fn (x, t) => (f x).Onload t) ts}>
-            <div class="modal fade" id={mid}>
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                  <dyn signal={signal ms}/>
-                </div>
-              </div>
-            </div>
-
-            {List.mapX (fn (x, t) => <xml>
+          {themed_head (Some titl) True True}
+          {bodyWithModal mid ms
+            (List.app (fn (x, t) => (f x).Onload t) ts)
+            (List.mapX (fn (x, t) => <xml>
               <div style="page-break-after: right">
                 {(f x).Render {ModalId = mid, ModalSpot = ms, Tab = None} t}
               </div>
-            </xml>) ts}
-          </body>
+            </xml>) ts)}
         </xml>
 end
 
