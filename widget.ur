@@ -262,49 +262,14 @@ val urlbox = { Configure = return (),
                              | Some url => <xml><a href={url}><tt>{[url]}</tt></a></xml>,
                Optional = False }
 
-val undoEtc = Ckeditor.Bar {Nam = Some "Undo, etc.",
-                            Buttons = Ckeditor.Cut
-                                          :: Ckeditor.Copy
-                                          :: Ckeditor.Paste
-                                          :: Ckeditor.PasteText
-                                          :: Ckeditor.PasteFromWord
-                                          :: Ckeditor.Undo
-                                          :: Ckeditor.Redo
-                                          :: []}
+fun ed s = QuillRichTextEditor.editor {
+  Toolbar = QuillRichTextEditor.defaultToolbar,
+  InitialText = s}
 
-val find = Ckeditor.Bar {Nam = Some "Find",
-                         Buttons = Ckeditor.Find
-                                       :: Ckeditor.Replace
-                                       :: Ckeditor.SelectAll
-                                       :: []}
-
-val basic = Ckeditor.Bar {Nam = Some "Basic Formatting",
-                          Buttons = Ckeditor.Bold
-                                        :: Ckeditor.Italic
-                                        :: Ckeditor.Underline
-                                        :: Ckeditor.RemoveFormat
-                                        :: []}
-
-val lists = Ckeditor.Bar {Nam = Some "Lists",
-                          Buttons = Ckeditor.NumberedList
-                                        :: Ckeditor.BulletedList
-                                        :: []}
-
-val styles = Ckeditor.Bar {Nam = Some "Styles",
-                           Buttons = Ckeditor.Styles
-                                         :: []}
-
-val links = Ckeditor.Bar {Nam = Some "Links",
-                          Buttons = Ckeditor.Link
-                                        :: Ckeditor.Unlink
-                                        :: []}
-
-fun ed s = Ckeditor.editor {Width = Ckeditor.DefaultSize,
-                            Height = Ckeditor.DefaultSize,
-                            ToolbarSet = Ckeditor.Custom (undoEtc :: find :: basic :: lists :: styles :: links :: []),
-                            InitialText = s}
-
-val tags = (Html.b, Html.i, Html.a, Html.strong, Html.em, Html.p, Html.div, Html.br, Html.code, Html.tt, Html.ol, Html.ul, Html.li)
+val tags = (Html.b, Html.i, Html.a, Html.img, Html.strong, Html.em, Html.p,
+  Html.div, Html.br, Html.code, Html.tt, Html.ol, Html.ul, Html.li,
+  Html.h1, Html.h2, Html.h3, Html.h4, Html.h5, Html.h6,
+  Html.blockquote, Html.s, Html.pre, Html.u, Html.sub, Html.sup, Html.span)
 
 fun html s =
     case Html.format tags s of
@@ -316,17 +281,19 @@ fun textFromHtml s =
         Html.Failure msg => "HTML error: " ^ msg
       | Html.Success txt => txt
 
-val htmlbox = { Configure = return (),
-                Create = fn () => ed "",
-                Initialize = fn () => ed,
-                Reset = fn me => Ckeditor.setContent me "",
-                Set = fn me v => Ckeditor.setContent me v,
-                Reconfigure = fn _ () => return (),
-                AsWidget = fn me _ => Ckeditor.show me,
-                AsWidgetSimple = fn me _ => Ckeditor.show me,
-                Value = Ckeditor.content,
-                AsValue = html,
-                Optional = False }
+val htmlbox = {
+  Configure = return (),
+  Create = fn () => ed "",
+  Initialize = fn () => ed,
+  Reset = fn me => QuillRichTextEditor.setContent me "",
+  Set = fn me v => QuillRichTextEditor.setContent me v,
+  Reconfigure = fn _ () => return (),
+  AsWidget = fn me _ => QuillRichTextEditor.render me,
+  AsWidgetSimple = fn me _ => QuillRichTextEditor.render me,
+  Value = QuillRichTextEditor.content,
+  AsValue = html,
+  Optional = False
+}
 
 type choicebox (a :: Type) =
     { Choices : list a,

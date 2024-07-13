@@ -1,0 +1,11 @@
+ffi quillFfi
+jsFunc QuillFfi.replace=uw_quill_replace
+jsFunc QuillFfi.setContent=uw_quill_setContent
+clientOnly QuillFfi.replace
+clientOnly QuillFfi.setContent
+benignEffectful QuillFfi.replace
+benignEffectful QuillFfi.setContent
+jsFile quillUrweb.js
+
+$/list
+quillRichTextEditor
