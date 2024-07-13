@@ -41,6 +41,7 @@ val formatPlainText : tags ::: {{Type}} -> folder tags -> $(map tag tags)
 val b : tag []
 val i : tag []
 val a : tag [Href = url]
+val img : tag [Src = url]
 val strong : tag []
 val em : tag []
 val p : tag []
@@ -51,6 +52,20 @@ val ol : tag []
 val ul : tag []
 val li : tag []
 val div : tag []
+val h1 : tag []
+val h2 : tag []
+val h3 : tag []
+val h4 : tag []
+val h5 : tag []
+val h6 : tag []
+val blockquote : tag []
+val s : tag []
+val pre : tag []
+val u : tag []
+val sub : tag []
+val sup : tag []
+val span : tag []
+
 
 val unhtml : string -> string
 (* Remove all HTML formatting. *)

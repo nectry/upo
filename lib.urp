@@ -5,6 +5,7 @@ library ckeditor
 library chartjs
 library dateTimePicker
 library select2
+library quillRichTextEditor
 library fullCalendar
 allow responseHeader Content-Disposition
 allow env SSL_CLIENT_S_DN

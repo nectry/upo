@@ -99,7 +99,7 @@ fun format [tags] (fl : folder tags) (tags : $(map tag tags)) [ctx] [[Body] ~ ct
                                                     doAttrs (ch, String.substring post {Start = 1,
                                                                                         Len = String.length post - 1},
                                                              ats, isClosed)
-                                                else 
+                                                else
                                                     case String.split post #"=" of
                                                         None =>
                                                         (case String.split post #"\x3E" of
@@ -235,7 +235,7 @@ fun formatPlainText [tags] (fl : folder tags) (tags : $(map tag tags)) s =
                                                     doAttrs (ch, String.substring post {Start = 1,
                                                                                         Len = String.length post - 1},
                                                              ats, isClosed)
-                                                else 
+                                                else
                                                     case String.split post #"=" of
                                                         None =>
                                                         (case String.split post #"\x3E" of
@@ -308,20 +308,41 @@ fun addUrl u s =
     if u = s || u = "mailto:" ^ s then
         s
     else
-        s ^ " <" ^ u ^ ">"
+        "[" ^ s ^ "](" ^ u ^ ")"
 
-val b = simpleTag (fn s => "*" ^ s ^ "*") "b" @@b
+val b = simpleTag (fn s => "**" ^ s ^ "**") "b" @@b
 val i = simpleTag (fn s => "_" ^ s ^ "_") "i" @@i
 val a = simpleTag' (fn r s => addUrl (show r.Href) s) "a" @@a {Href = url "href"}
-val strong = simpleTag (fn s => "*" ^ s ^ "*") "strong" @@strong
+val img = simpleTag' (fn r s => addUrl (show r.Src) s) "img" @@img {Src = url "src"}
+val strong = simpleTag (fn s => "**" ^ s ^ "**") "strong" @@strong
 val em = simpleTag (fn s => "_" ^ s ^ "_") "em" @@em
-val code = simpleTag (fn s => s) "code" @@tt
-val tt = simpleTag (fn s => s) "tt" @@tt
+val code = simpleTag (fn s => "`" ^ s ^ "`") "code" @@tt
+val tt = simpleTag (fn s => "`" ^ s ^ "`") "tt" @@tt
 val p = simpleTag (fn s => s ^ "\n\n") "p" @@p
 val ol = simpleTag (fn s => s) "ol" @@ol
 val ul = simpleTag (fn s => s) "ul" @@ul
 val li = simpleTag (fn s => " - " ^ s ^ "\n") "li" @@li
 val div = simpleTag (fn s => s ^ "\n\n") "div" @@div
+val h1 = simpleTag (fn s => "\n\n# " ^ s ^ "\n\n") "h1" @@h1
+val h2 = simpleTag (fn s => "\n\n## " ^ s ^ "\n\n") "h2" @@h2
+val h3 = simpleTag (fn s => "\n\n### " ^ s ^ "\n\n") "h3" @@h3
+val h4 = simpleTag (fn s => "\n\n#### " ^ s ^ "\n\n") "h4" @@h4
+val h5 = simpleTag (fn s => "\n\n##### " ^ s ^ "\n\n") "h5" @@h5
+val h6 = simpleTag (fn s => "\n\n###### " ^ s ^ "\n\n") "h6" @@h6
+val blockquote = simpleTag (fn s => "> " ^ s ^ "\n\n") "blockquote" @@blockquote
+val s = simpleTag (fn s => "~~" ^ s ^ "~~") "s" @@s
+val pre = simpleTag (fn s =>
+  case String.atFirst s #"\n" of
+      None => "`" ^ s ^ "`"
+    | Some _ => "```\n" ^ s ^ "```\n") "pre" @@pre
+
+(* Some tags show up as htmly when going to markdown/plain text *)
+val u = simpleTag (fn s => "<ins>" ^ s ^ "</ins>") "u" @@u
+val sub = simpleTag (fn s => "<sub>" ^ s ^ "</sub>") "sub" @@sub
+val sup = simpleTag (fn s => "<sup>" ^ s ^ "</sup>") "sup" @@sup
+
+(* Some tags we just ignore, like custom styling on spans *)
+val span = simpleTag (fn s => s) "span" @@span
 
 val br = {Nam = "br",
           Attributes = {},
