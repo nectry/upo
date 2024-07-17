@@ -1,4 +1,5 @@
 library .
+library ckeditor
 file /bootstrap.min.css cached/bootstrap.min.css
 file /jquery-3.2.1.min.js cached/jquery-3.2.1.min.js
 file /popper.min.js cached/popper.min.js
