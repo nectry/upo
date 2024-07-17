@@ -184,7 +184,7 @@ functor Make(M : sig
         ChangeWatcher.changedBy ch title
 
     fun renderActionButtons ctx a r =
-      <xml><td style="display: flex">
+      <xml><td><div style="display: flex">
         {if a.Perm.Delete then
              Ui.modalButton ctx (CLASS "btn btn-light")
                             <xml><span class="glyphicon glyphicon-trash"/></xml>
@@ -204,7 +204,7 @@ functor Make(M : sig
              </button>
          </xml> else
              <xml/>}
-      </td></xml>
+      </div></td></xml>
 
     fun renderEditButtons ctx a r ws =
       <xml><td>
@@ -224,6 +224,7 @@ functor Make(M : sig
       </td></xml>
 
     fun render ctx a = <xml>
+      <div class="table-responsive">
       <table class="bs-table table-striped table-centered">
         <thead><tr>
           {@mapX [fn _ => string] [tr]
@@ -273,7 +274,7 @@ functor Make(M : sig
              </xml>
          else
              <xml/>}
-      </table>
+      </table></div>
     </xml>
 
 
