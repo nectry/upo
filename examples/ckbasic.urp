@@ -1,4 +1,4 @@
-library ../default
+library ../ckeditor
 rewrite all Ckbasic/*
 database dbname=course
 

@@ -1,7 +1,6 @@
 html5
 library $/bootstrap/bootstrap5
 library $/ajaxUpload
-library ckeditor
 library chartjs
 library dateTimePicker
 library select2
