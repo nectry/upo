@@ -28,23 +28,23 @@ function quillConvertToolbar(toolbars) {
 }
 
 
+function uw_quill_setContent(quill, s) {
+  quill.setText('', 'silent');
+  quill.clipboard.dangerouslyPasteHTML(s, 'silent');
+}
+
 function uw_quill_replace(r) {
   const quillToolbar = quillConvertToolbar(r._Toolbar);
   const quill = new Quill('#' + r._Id, {
     modules: {
       toolbar: quillToolbar
     },
-    placeholder: sg(r._Source),
     bounds: '#' + r._Id,
     theme: 'snow'
   });
   quill.on('text-change', (delta, oldDelta, source) => {
     sv(r._Source, quill.getSemanticHTML());
   });
+  uw_quill_setContent(quill, sg(r._Source))
   return quill;
-}
-
-function uw_quill_setContent(quill, s) {
-  quill.setText('', 'silent');
-  quill.clipboard.dangerouslyPasteHTML(s, 'silent');
 }
