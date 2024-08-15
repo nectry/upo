@@ -19,7 +19,11 @@ using `render` for `AsValue` too!), but this module wants to depend on
 `widget.ur` so that it can easily declare a `widget` instance based on the
 `Widget.htmlbox`, which can only be done trivially here because within this
 module, `richtext` is just `string`. *)
-val tags = (Html.b, Html.i, Html.a, Html.strong, Html.em, Html.p, Html.div, Html.br, Html.code, Html.tt, Html.ol, Html.ul, Html.li)
+val tags = (Html.b, Html.i, Html.a, Html.img, Html.strong, Html.em, Html.p,
+  Html.div, Html.br, Html.code, Html.tt, Html.ol, Html.ul, Html.li,
+  Html.h1, Html.h2, Html.h3, Html.h4, Html.h5, Html.h6,
+  Html.blockquote, Html.s, Html.pre, Html.u, Html.sub, Html.sup, Html.span)
+
 fun richTextToHtml (rt : richtext) : xbody =
     case Html.format tags rt of
         Html.Failure msg => <xml><b>HTML error: {[msg]}</b></xml>
